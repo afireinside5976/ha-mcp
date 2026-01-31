@@ -169,3 +169,51 @@ def list_directory(path: str = "") -> dict[str, Any]:
             "success": False,
             "error": str(e)
         }
+def register_file_operations_tools(mcp, client, **kwargs):
+    """Register file operation tools with MCP server."""
+    
+    @mcp.tool()
+    def ha_read_file(path: str) -> dict:
+        """Read file contents from Home Assistant /config directory.
+        
+        Args:
+            path: File path relative to /config (e.g., ".storage/core.config_entries")
+        
+        Returns:
+            dict with success status, content, and file info
+        
+        Example:
+            ha_read_file(".storage/core.config_entries")
+        """
+        return read_file(path)
+    
+    @mcp.tool()
+    def ha_write_file(path: str, content: str) -> dict:
+        """Write file contents to Home Assistant /config directory.
+        
+        Args:
+            path: File path relative to /config
+            content: File content to write
+        
+        Returns:
+            dict with success status and file info
+        
+        Example:
+            ha_write_file("automations.yaml", "# My automations\\n")
+        """
+        return write_file(path, content)
+    
+    @mcp.tool()
+    def ha_list_directory(path: str = "") -> dict:
+        """List directory contents in Home Assistant /config directory.
+        
+        Args:
+            path: Directory path relative to /config (default: root)
+        
+        Returns:
+            dict with success status and list of files/folders
+        
+        Example:
+            ha_list_directory(".storage")
+        """
+        return list_directory(path)
